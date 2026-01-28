@@ -57,15 +57,35 @@ fig = px.line(
 )
 fig.update_layout(
     title="Pink Morsel — Daily Sales Trend",
+    # Wrote the Key insights we were looking in a more cleaner way without changing the line graph daily sales
     title_x=0.5,
     template="plotly_white",
-    margin=dict(l=40, r=40, t=60, b=40),
+    margin=dict(l=40, r=40, t=60, b=110),
+    annotations=[
+        dict(
+            text=(
+                "<b style='color:#1f2937'>Key Insight:</b> "
+                "<b style='color:#059669'>Sales increased after the 15 Jan 2021 price rise.</b> "
+                "Peak daily sales occurred <b>post-increase</b>, "
+                "indicating <b style='color:#2563eb'>strong demand and price resilience</b>."
+            ),
+            x=0.5,
+            y=-0.30,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+            align="center",
+            font=dict(size=13)
+        )
+    ]
 )
+
+
 # Price increase marker
 fig.add_vline(
     x=price_increase_date.strftime("%Y-%m-%d"),
     line_dash="dash",
-    line_color="crimson"
+    line_color="magenta"
 )
 fig.add_annotation(
     x=price_increase_date,
