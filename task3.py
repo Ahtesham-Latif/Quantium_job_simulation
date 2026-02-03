@@ -1,7 +1,7 @@
 # Import pandas for data manipulation as we did earlier
 import pandas as pd
 # and import Dash for webapp , html and dcc for graphs and sliders
-from dash import Dash, html, dcc
+from dash import Dash, html, dcc , Input, Output
 # import plotly libraries for visually appealing graphs
 import plotly.express as px
 import plotly.graph_objects as go
@@ -19,9 +19,14 @@ df['Date'] = pd.to_datetime(df['Date'])
 print(df.head())
 
 # Now will calculate daily sales for the product
-daily_sales = df.groupby('Date', as_index=False).sum()
+daily_sales = df.groupby('Date', as_index=False)['Sales'].sum()
 print(daily_sales.head())
 
+#Now we divide the daily_sales according to each region
+# Which i forget in the last commit and it will be used for 
+# Region picker in the graph 
+daily_region_sales = df.groupby(
+    ['Date', 'Region'], as_index=False)['Sales'].sum()
 #Calculate lowest and higehst sales in a day for all regions combine
 
 
@@ -29,6 +34,14 @@ Lowest_sales = daily_sales.loc[daily_sales['Sales'].idxmin()]
 Highest_sales = daily_sales.loc[daily_sales['Sales'].idxmax()]
 print(Lowest_sales)
 print(Highest_sales)
+High_for_one_region = daily_region_sales.loc[daily_region_sales['Sales'].idxmax()]
+print("High_for_one_region")
+print(High_for_one_region)
+
+Low_for_one_region = daily_region_sales.loc[daily_region_sales['Sales'].idxmin()]
+print("Low_for_one_region")
+print(Low_for_one_region)
+# Now we will check if sales increased after price increase date
 
 # Price increase date
 price_increase_date = pd.to_datetime('2021-01-15')
@@ -47,68 +60,8 @@ conclusion = ('Sales increased after price increase date'
                else 'Sales decreased after price increase date')
 print("Conclusion:", conclusion)
 
+#
 
-#Now time to structure of line chart
-fig = px.line(
-    daily_sales,
-    x='Date',
-    y='Sales',
-    labels={'Date': 'Date', 'Sales': 'Total Daily Sales'},
-)
-fig.update_layout(
-    title="Pink Morsel — Daily Sales Trend",
-    # Wrote the Key insights we were looking in a more cleaner way without changing the line graph daily sales
-    title_x=0.5,
-    template="plotly_white",
-    margin=dict(l=40, r=40, t=60, b=110),
-    annotations=[
-        dict(
-            text=(
-                "<b style='color:#1f2937'>Key Insight:</b> "
-                "<b style='color:#059669'>Sales increased after the 15 Jan 2021 price rise.</b> "
-                "Peak daily sales occurred <b>post-increase</b>, "
-                "indicating <b style='color:#2563eb'>strong demand and price resilience</b>."
-            ),
-            x=0.5,
-            y=-0.30,
-            xref="paper",
-            yref="paper",
-            showarrow=False,
-            align="center",
-            font=dict(size=13)
-        )
-    ]
-)
-
-
-# Price increase marker
-fig.add_vline(
-    x=price_increase_date.strftime("%Y-%m-%d"),
-    line_dash="dash",
-    line_color="magenta"
-)
-fig.add_annotation(
-    x=price_increase_date,
-    y=daily_sales['Sales'].max(),
-    text="Price Increase<br>15 Jan 2021",
-    showarrow=False,
-    yanchor="bottom"
-)
-# Highest & Lowest points
-fig.add_trace(go.Scatter(
-    x=[Highest_sales['Date']],
-    y=[Highest_sales['Sales']],
-    mode='markers',
-    marker=dict(size=9),
-    name="Highest Sales Day"
-))
-fig.add_trace(go.Scatter(
-    x=[Lowest_sales['Date']],
-    y=[Lowest_sales['Sales']],
-    mode='markers',
-    marker=dict(size=9),
-    name="Lowest Sales Day"
-))
 
 # Now we will make Dash app for visualization
 
@@ -116,10 +69,80 @@ app = Dash(__name__)
 server = app.server
 app.layout = html.Div([
     html.H1("Pink Morsel Sales", style={'text-align': 'center'}),
-    dcc.Graph(figure=fig)
+    dcc.RadioItems(
+    id='region-picker',
+    options=[
+        {'label': 'All Regions', 'value': 'all'},
+        {'label': 'North', 'value': 'north'},
+        {'label': 'South', 'value': 'south'},
+        {'label': 'East', 'value': 'east'},
+        {'label': 'West', 'value': 'west'},
+    ],
+    value='all',
+    inline=True,
+    style={'text-align': 'center', 'margin-bottom': '20px'}
+),
+    dcc.Graph(id='sales-graph')
 ])
+@app.callback(
+    Output('sales-graph', 'figure'),
+    Input('region-picker', 'value')
+)
+def update_graph(selected_region):
+
+    if selected_region == 'all':
+        plot_df = daily_sales
+    else:
+        plot_df = daily_region_sales[
+            daily_region_sales['Region'].str.lower() == selected_region
+        ]
+   
+    highest_row = plot_df.loc[plot_df['Sales'].idxmax()]
+    lowest_row = plot_df.loc[plot_df['Sales'].idxmin()]
+#Now time to structure of line chart
+    fig = px.line(
+    # fixed the bug 
+    # I was using plot_df instead of daily_sales
+    plot_df,
+    x='Date',
+    y='Sales',
+    labels={'Date': 'Date', 'Sales': 'Total Daily Sales'},
+    )
+    fig.update_layout(
+    title="Pink Morsel — Daily Sales Trend",
+    title_x=0.5,
+    template="plotly_white",
+    margin=dict(l=40, r=40, t=60, b=40),
+    )
+# Price increase marker
+    fig.add_vline(
+    x=price_increase_date.strftime("%Y-%m-%d"),
+    line_dash="dash",
+    line_color="crimson"
+    )
+    fig.add_annotation(
+    x=price_increase_date,
+    y=daily_sales['Sales'].max(),
+    text="Price Increase<br>15 Jan 2021",
+    showarrow=False,
+    yanchor="bottom"
+    )
+# Highest & Lowest points
+    fig.add_trace(go.Scatter(
+    x=[highest_row['Date']],
+    y=[highest_row['Sales']],
+    mode='markers',
+    marker=dict(size=9),
+    name="Highest Sales Day"
+    ))
+    fig.add_trace(go.Scatter(
+    x=[lowest_row['Date']],
+    y=[lowest_row['Sales']],
+    mode='markers',
+    marker=dict(size=9),
+    name="Lowest Sales Day"
+    ))
+    return fig
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
