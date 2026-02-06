@@ -1,6 +1,7 @@
 # Import pandas for data manipulation as we did earlier
 import pandas as pd
 # and import Dash for webapp , html and dcc for graphs and sliders
+# Will use input and output for callback 
 from dash import Dash, html, dcc , Input, Output
 # import plotly libraries for visually appealing graphs
 import plotly.express as px
@@ -8,19 +9,19 @@ import plotly.graph_objects as go
 
 # Now we will read pink_morsel_sales.csv
 df = pd.read_csv(r"data/pink_morsel_sales.csv")
-print(df.head())
+#print(df.head())
 
 # Lets rename the columns for ease
 df = df.rename(columns={'date':'Date', 'product':'Product', 'region':'Region', })
-print(df.head())
+#print(df.head())
 
 # Now will format date for use 
 df['Date'] = pd.to_datetime(df['Date'])
-print(df.head())
+#print(df.head())
 
 # Now will calculate daily sales for the product
 daily_sales = df.groupby('Date', as_index=False)['Sales'].sum()
-print(daily_sales.head())
+#print(daily_sales.head())
 
 #Now we divide the daily_sales according to each region
 # Which i forget in the last commit and it will be used for 
@@ -32,27 +33,27 @@ daily_region_sales = df.groupby(
 
 Lowest_sales = daily_sales.loc[daily_sales['Sales'].idxmin()]
 Highest_sales = daily_sales.loc[daily_sales['Sales'].idxmax()]
-print(Lowest_sales)
-print(Highest_sales)
-High_for_one_region = daily_region_sales.loc[daily_region_sales['Sales'].idxmax()]
-print("High_for_one_region")
-print(High_for_one_region)
+#print(Lowest_sales)
+#print(Highest_sales)
+#High_for_one_region = daily_region_sales.loc[daily_region_sales['Sales'].idxmax()]
+#print("High_for_one_region")
+#print(High_for_one_region)
 
-Low_for_one_region = daily_region_sales.loc[daily_region_sales['Sales'].idxmin()]
-print("Low_for_one_region")
-print(Low_for_one_region)
+#Low_for_one_region = daily_region_sales.loc[daily_region_sales['Sales'].idxmin()]
+#print("Low_for_one_region")
+#print(Low_for_one_region)
 # Now we will check if sales increased after price increase date
 
 # Price increase date
 price_increase_date = pd.to_datetime('2021-01-15')
-print(price_increase_date)
+#print(price_increase_date)
 
 # Before vs after the price_increase_date
 before_price_increase = daily_sales[daily_sales['Date'] < price_increase_date]
 after_price_increase = daily_sales[daily_sales['Date'] >= price_increase_date]
 
-print(before_price_increase)
-print(after_price_increase)
+#print(before_price_increase)
+#print(after_price_increase)
 
 # Now we can view from dataset that sales increases after the price_increase date but we will make a function
 conclusion = ('Sales increased after price increase date'
@@ -68,7 +69,8 @@ print("Conclusion:", conclusion)
 app = Dash(__name__)
 server = app.server
 app.layout = html.Div([
-    html.H1("Pink Morsel Sales", style={'text-align': 'center'}),
+    html.H1("Pink Morsel Sales Visualization", style={'text-align': 'center'}),
+    # Added Radio items for selection of regions
     dcc.RadioItems(
     id='region-picker',
     options=[
@@ -91,6 +93,7 @@ app.layout = html.Div([
 def update_graph(selected_region):
 
     if selected_region == 'all':
+        #plot_df is used to store the selected dataframe now
         plot_df = daily_sales
     else:
         plot_df = daily_region_sales[
