@@ -1,7 +1,40 @@
-# Quantium starter repo
-Pink Morsel Sales VisualizerA data engineering and visualization suite designed to analyze sales trends for the "Pink Morsel" product. This tool was developed to investigate the impact of a significant price increase on January 15, 2021, providing stakeholders with a clear, interactive way to view performance across different geographical regions.✨ FeaturesAutomated Data ETLConsolidates fragmented data from multiple CSV sources.Sanitizes and cleans financial data for accurate calculation.Filters specifically for the "Pink Morsel" product line.Interactive Analytics DashboardTrend Visualization: High-fidelity line charts showing daily sales volume.Regional Selectors: Filter data by North, South, East, West, or All regions.Price Increase Impact: Visual markers (crimson dashed lines) pinpointing the exact date of price changes.Peak/Trough Detection: Automatic identification of highest and lowest sales days.Robust Quality AssuranceAutomated test suite using Selenium and Pytest.Headless browser configuration for CI/CD compatibility.Single-command execution via Shell scripting.🛠 Installation1. Clone the RepositoryBashgit clone https://github.com/vagabond-systems/quantium-starter-repo.git
+# 📊 Pink Morsel Sales Visualizer
+
+A data engineering and visualization suite that processes fragmented sales data to analyze the impact of a price increase on the **"Pink Morsel"** product.  
+
+It features an interactive Dash dashboard with regional filtering and a robust, automated Selenium testing pipeline.
+
+---
+
+## ✨ Features
+
+### 🔄 Automated Data ETL
+- Consolidates fragmented data from multiple CSV sources into a unified dataset  
+- Sanitizes and cleans financial data (currency formatting) for accurate calculation  
+- Filters specifically for the **"Pink Morsel"** product line  
+
+### 📈 Interactive Analytics Dashboard
+- **Trend Visualization**: High-fidelity line charts showing daily sales volume  
+- **Regional Selectors**: Filter data by North, South, East, West, or All regions via radio buttons  
+- **Price Increase Impact**: Visual markers (crimson dashed lines) pinpointing the exact date of price changes  
+- **Peak/Trough Detection**: Automatic identification of highest and lowest sales days  
+
+### 🧪 Robust Quality Assurance
+- Automated test suite using Selenium and Pytest  
+- Headless browser configuration for CI/CD compatibility  
+- Single-command execution via Shell scripting  
+
+---
+
+## 🛠 Installation
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/vagabond-systems/quantium-starter-repo.git
 cd quantium-starter-repo
-2. Setup Virtual EnvironmentBash# Initialize the environment
+2️⃣ Setup Virtual Environment
+# Initialize the environment
 python -m venv venv
 
 # Activate (Windows)
@@ -9,16 +42,59 @@ venv\Scripts\activate
 
 # Activate (Mac/Linux)
 source venv/bin/activate
-3. Install DependenciesBashpip install pandas dash[testing] plotly webdriver-manager selenium
-🚀 How to Run the ProjectPhase 1: Data ProcessingRun the ETL script to generate the formatted sales data from the raw input files:Bashpython app.py
-Output: data/pink_morsel_sales.csvPhase 2: Start the DashboardLaunch the Dash application:Bashpython task3.py
-Access the app: Open your browser and navigate to http://127.0.0.1:8050Phase 3: Automation & TestingTo ensure the system is running correctly, execute the automated test suite:Bash# Make script executable (Git Bash/Linux)
+3️⃣ Install Dependencies
+pip install pandas dash[testing] plotly webdriver-manager selenium
+🚀 How to Run the Project
+Phase 1: Data Processing
+Run the ETL script to generate the formatted sales data from the raw input files:
+
+python app.py
+Output:
+
+data/pink_morsel_sales.csv
+Phase 2: Start the Dashboard
+Launch the Dash application:
+
+python task3.py
+Access the app in your browser:
+
+http://127.0.0.1:8050
+Phase 3: Automation & Testing
+To ensure the system is running correctly, execute the automated test suite:
+
+# Make script executable (Git Bash/Linux)
 chmod +x run_test.sh
 
 # Run the tests
 ./run_test.sh
-🧪 Logic & CapabilitiesETL Logic: Uses Python's pandas library to perform regex-based cleaning of currency strings ($5.00 -> 5.0) and aggregate sales ($Sales = Price \times Quantity$).Reactive UI: Built with Dash callbacks; when a user selects a region, the backend re-calculates the idxmax() and idxmin() for sales to update the graph markers dynamically.Headless Testing: The conftest.py setup allows the Selenium WebDriver to run without a GUI, making it ideal for server environments.
+🧠 Logic & Capabilities
+ETL Logic
+Uses Python's pandas library
 
-👨‍💻 AuthorAhtesham LatifLinkedIn: linkedin.com/in/ahtesham-latif 
-GitHub: github.com/Ahtesham-Latif
-📜 LicenseThis project is licensed for educational and professional simulation use.
+Performs regex-based cleaning of currency strings
+
+Example: $5.00 → 5.0
+
+Aggregates sales using:
+
+Sales = Price × Quantity
+Reactive UI
+Built with Dash callbacks
+
+When a user selects a region:
+
+Backend recalculates idxmax() and idxmin() for sales
+
+Graph markers update dynamically
+
+Headless Testing
+conftest.py configuration enables Selenium WebDriver to run without a GUI
+
+Ideal for CI/CD pipelines and server environments
+
+👨‍💻 Author
+Ahtesham Latif
+
+LinkedIn: https://linkedin.com/in/ahtesham-latif
+
+GitHub: https://github.com/Ahtesham-Latif
