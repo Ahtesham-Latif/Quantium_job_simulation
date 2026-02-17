@@ -17,4 +17,8 @@ chmod +x run_test.sh
 
 # Run the tests
 ./run_test.sh
-🧪 Logic & CapabilitiesETL Logic: Uses Python's pandas library to perform regex-based cleaning of currency strings ($5.00 -> 5.0) and aggregate sales ($Sales = Price \times Quantity$).Reactive UI: Built with Dash callbacks; when a user selects a region, the backend re-calculates the idxmax() and idxmin() for sales to update the graph markers dynamically.Headless Testing: The conftest.py setup allows the Selenium WebDriver to run without a GUI, making it ideal for server environments.👨‍💻 AuthorAhtesham LatifLinkedIn: linkedin.com/in/ahtesham-latif GitHub: github.com/Ahtesham-Latif📜 LicenseThis project is licensed for educational and professional simulation use.
+🧪 Logic & CapabilitiesETL Logic: Uses Python's pandas library to perform regex-based cleaning of currency strings ($5.00 -> 5.0) and aggregate sales ($Sales = Price \times Quantity$).Reactive UI: Built with Dash callbacks; when a user selects a region, the backend re-calculates the idxmax() and idxmin() for sales to update the graph markers dynamically.Headless Testing: The conftest.py setup allows the Selenium WebDriver to run without a GUI, making it ideal for server environments.
+
+👨‍💻 AuthorAhtesham LatifLinkedIn: linkedin.com/in/ahtesham-latif 
+GitHub: github.com/Ahtesham-Latif
+📜 LicenseThis project is licensed for educational and professional simulation use.
