@@ -25,7 +25,7 @@ print("Pink Morsel Dataframe:")
 
 
 # Now we need to convert price to float for calculation
-pink_morsel_df['price'] = pink_morsel_df['price'].replace('[\$,]', '', regex=True).astype(float)    
+pink_morsel_df['price'] = pink_morsel_df['price'].replace(r'[\$,]', '', regex=True).astype(float)    
 print(pink_morsel_df.head())
 # Lets here check the shape of pink morsel dataframe for verification of total records
 print("Shape of Pink Morsel Dataframe:", pink_morsel_df.shape)

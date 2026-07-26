@@ -4,7 +4,7 @@
 # cd "$(dirname "$0")"
 
 # 2. Activate the virtual environment
-# Note: On Windows/Git Bash, the path is usually venv/Scripts/activate
+# venv/Scripts/activate
 source venv/Scripts/activate
 
 # 3. Execute the test suite

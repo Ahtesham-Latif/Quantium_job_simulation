@@ -4,7 +4,13 @@ import pytest
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager # type: ignore
 from selenium.webdriver.chrome.service import Service
+import os
 
+# Automatically download and add chromedriver to the system PATH
+os.environ['PATH'] += os.pathsep + os.path.dirname(ChromeDriverManager().install())
+
+
+@pytest.hookimpl(optionalhook=True)
 def pytest_setup_options():
     # Configure Chrome options for headless testing
     options = Options()
